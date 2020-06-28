@@ -12,13 +12,13 @@ class Calendar {
           <table class="tbl-calendar">
               <thead class="thead">
                   <tr class="row-days">
-                      <th class="th-day">Вс</th>
                       <th class="th-day">Пн</th>
                       <th class="th-day">Вт</th>
                       <th class="th-day">Ср</th>
                       <th class="th-day">Чт</th>
                       <th class="th-day">Пт</th>
                       <th class="th-day">Сб</th>
+                      <th class="th-day">Вс</th>
                   </tr>
               </thead>
               <tbody class="tbody">
@@ -31,15 +31,11 @@ class Calendar {
     this.id = options.id;
     this.element = document.querySelector(this.id);
     this.element.addEventListener("focus", (e) => {
-      console.log('focus input');
       if (document.getElementsByClassName("ab-calendar")[0]) {
         document.getElementsByClassName("ab-calendar")[0].remove();
       }
       this.init();
     });
-    // this.element.addEventListener('change', (e) => {
-    //   console.log('left input');
-    // });
   }
 
   //  Инициализируем календарь
@@ -179,19 +175,34 @@ class Calendar {
   updateCalendar(month, year) {
     //  кол-во дней в месяце
     let daysInMonth = new Date(year, month + 1, 0).getDate();
-    console.log(daysInMonth);
 
     this.tBody.innerHTML = ""; // очищаем календарь
-    this.cMonthNav.innerHTML = this.months[month].fullname + " " + year; //  название месяца в календаре
+    //  название месяца в календаре
+    this.cMonthNav.innerHTML = this.months[month].fullname + " " + year;
 
-    let date = new Date(year, month, 1);
+    let date = new Date(year, month, 1); // Первый день выбранного месяца
+
 
     //  создание календаря динамически
     while (date.getDate() <= daysInMonth && month == date.getMonth()) {
       let row = document.createElement("tr");
 
+
       for (let j = 0; j < 7; j++) {
-        if (j == date.getDay() && month == date.getMonth()) {
+        //  Приводим отобрадение календаря к формату пн(0) - вс(6)
+        let weekDay = date.getDay();
+        if (weekDay === 0) {
+          weekDay = 6;
+        } else {
+          weekDay = weekDay - 1;
+        }
+
+
+        if (j == weekDay && month == date.getMonth()) {
+
+          // console.log(j);
+
+
           let cell = document.createElement("td");
           cell.classList.add("date-cell");
           let cellText = document.createTextNode(date.getDate());
